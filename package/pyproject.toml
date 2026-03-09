@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "virtualpos-sdk-python"
+version = "0.1.0"
+description = "Unofficial Python SDK for VirtualPOS API v3."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+  { name = "VladmirVarelaH" }
+]
+dependencies = [
+  "requests>=2.31.0"
+]
+keywords = ["virtualpos", "payments", "sdk", "api"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Documentation = "https://virtualpos.readme.io/reference/getting-started-with-your-api"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["virtualpos_sdk*"]
+

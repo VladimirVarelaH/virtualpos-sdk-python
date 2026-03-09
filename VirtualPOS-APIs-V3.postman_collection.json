@@ -1,0 +1,1998 @@
+{
+  "info": {
+    "_postman_id": "012c3160-e2ad-4e11-a99d-d0ab0a807638",
+    "name": "VirtualPOS - APIs - V3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38772892"
+  },
+  "item": [
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Payment",
+          "item": [
+            {
+              "name": "crear payment",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"amount\": 9990,\n    \"email\": \"user@example.com\",\n    \"social_id\": \"12345678-9\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone\": \"912345678\",\n    \"description\": \"pago de prueba\",\n    \"merchant_internal_code\": \"OC_TEST_1234\",\n    \"merchant_internal_channel\": \"portal_pagos\",\n    \"return_url\": \"aHR0cHM6Ly9odHRwYmluLm9yZy9wb3N0\",\n    \"callback_url\": \"aHR0cHM6Ly9odHRwYmluLm9yZy9wb3N0\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payment",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payment"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "obtener link web Checkout",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"return_url\": \"aHR0cHM6Ly9odHRwYmluLm9yZy9wb3N0\",\n    \"callback_url\": \"aHR0cHM6Ly9odHRwYmluLm9yZy9wb3N0\",\n    \"payment_method\":\"all\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payment/031649454fdc0cb4/webcheckout",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payment",
+                    "031649454fdc0cb4",
+                    "webcheckout"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recuperar payment",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payment/3216491b000c803e",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payment",
+                    "3216491b000c803e"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "cancelar payment",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payment/0316483942d0bca8",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payment",
+                    "0316483942d0bca8"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "listar payments",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payments?limit=3&page=0",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payments"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "autorizar payment",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"payment_method_type\": \"CREDIT_CARD\",\n    \"credit_card\": {\n        \"card_number\": \"4051885600446623\",\n        \"expiration_date\": \"11/27\",\n        \"cvv\": \"123\",\n        \"card_holder_name\": \"virtualPOS\"\n    },\n    \"installments_number\": 1,\n    \"token_card\": \"1234\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payment/3216491b000c803e/authorize",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payment",
+                    "3216491b000c803e",
+                    "authorize"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "enviar payment",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"channel\": \"EMAIL\",\n    \"receiver\" :\"johndoe@gmail.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/payment/32164920e9583141/send",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "payment",
+                    "32164920e9583141",
+                    "send"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Suscriptions",
+      "item": [
+        {
+          "name": "Plan",
+          "item": [
+            {
+              "name": "crear plan",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Plan de cobro diario sandbox\",\n    \"description\": \"Plan de prueba\",\n    \"type\": \"MONTO_VARIABLE\",\n    \"currency\": \"CLP\",\n    \"amount\": 9990,\n    \"trial_days\": \"0\",\n    \"num_charges\": 3,\n    \"frequency_type\": \"Diario\",\n    \"fixed_amount_day_charge\": \"01\",\n    \"return_url\": \"https://www.google.cl\",\n    \"automatic_renewal\": \"F\",\n    \"show_in_terminal\": \"F\"\n}"
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/plan",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "plan"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recuperar plan",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/plan/{{plan_id}}",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "plan",
+                    "{{plan_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recuperar plans",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/plans?limit=3&page=0",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "plans"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Suscription",
+          "item": [
+            {
+              "name": "crear una suscripcion",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"user@example.com\",\n    \"social_id\": \"12345678-9\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"56912345678\",\n    \"plan_id\": \"3972d348f0398dda9f0b97354218742b\",\n    \"return_url\": \"aHR0cHM6Ly9odHRwYmluLm9yZy9wb3N0\",\n    \"callback_url\": \"aHR0cHM6Ly9odHRwYmluLm9yZy9wb3N0\",\n    \"channel\": \"API\",\n    \"service_id\": \"12345678901234567\",\n    \"card_on_file\": \"LOCAL_ISSUER\",\n    \"automatic_renewal\": \"T\",\n    \"charges_program\": \"W3siYW1vdW50IjoiOTkwIiwiY2hhcmdlX2RhdGUiOiIyMDIzLTA2LTAyIiwiZGVzY3JpcHRpb24iOiJDYXJnbyBqdW5pbyAxIGRlIDIiLCJpbnRlcm5hbF9jb2RlIjoiMDAxIn0seyJhbW91bnQiOiI5OTAiLCJjaGFyZ2VfZGF0ZSI6IjIwMjMtMDYtMDIiLCJkZXNjcmlwdGlvbiI6IkNhcmdvIGp1bmlvIDIgZGUgMiIsImludGVybmFsX2NvZGUiOiIwMDIifV0=\"\n}"
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/suscription",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "suscription"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "cancelar una suscription",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/suscription/16013a4c0a",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "suscription",
+                    "16013a4c0a"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recuperar una suscripcion",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/suscription/569a7cf1b2",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "suscription",
+                    "569a7cf1b2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "listar suscription",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/suscriptions?limit=3&page=1",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "suscriptions"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "generar link de cambio",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/suscription/5eb819de00/changecard",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "suscription",
+                    "5eb819de00",
+                    "changecard"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Charge",
+          "item": [
+            {
+              "name": "crear charge",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"charge_date\": \"2024-09-26\",\n    \"amount\": 59,\n    \"description\": \"donacion septiembre 2024\",\n    \"suscription_id\": \"90518a806c\",\n    \"internal_code\":  \"310520231\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url_api_virtualpos_producccion}}/v3/charge",
+                  "host": [
+                    "{{url_api_virtualpos_producccion}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "charge"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "cancelar charge",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/charge/cid_bd557b8d400feff6df2f13de3c4a7675",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "charge",
+                    "cid_bd557b8d400feff6df2f13de3c4a7675"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "recuperar charge",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/charge/cid_798140bcd7ee8841b64828781a944c3f",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "charge",
+                    "cid_798140bcd7ee8841b64828781a944c3f"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "listar charges",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/suscription/{{suscription_id}}/charges?limit=4&page=1",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "suscription",
+                    "{{suscription_id}}",
+                    "charges"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "4"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "cancelar cargos futuros",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var jwtSecret =  pm.collectionVariables.get(\"secret_key\");",
+                      "",
+                      "// Set headers for JWT",
+                      "var header = {",
+                      "\t'typ': 'JWT',",
+                      "\t'alg': 'HS256'",
+                      "};",
+                      "",
+                      "var data = {",
+                      "\t'api_key': pm.collectionVariables.get(\"api_key\")",
+                      "}",
+                      "",
+                      "function base64url(source) {",
+                      "    // Encode in classical base64",
+                      "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+                      "    ",
+                      "    // Remove padding equal characters",
+                      "    encodedSource = encodedSource.replace(/=+$/, '')",
+                      "    ",
+                      "    // Replace characters according to base64url specifications",
+                      "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+                      "    encodedSource = encodedSource.replace(/\\//g, '_')",
+                      "    ",
+                      "    return encodedSource",
+                      "}",
+                      "",
+                      "// encode header",
+                      "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+                      "var encodedHeader = base64url(stringifiedHeader)",
+                      "",
+                      "// encode data",
+                      "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+                      "var encodedData = base64url(stringifiedData)",
+                      "",
+                      "// build token",
+                      "var token = `${encodedHeader}.${encodedData}`",
+                      "",
+                      "// sign token",
+                      "var signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+                      "signature = base64url(signature)",
+                      "",
+                      "var signedToken = `${token}.${signature}`",
+                      "",
+                      "pm.environment.set('signature', signedToken)",
+                      "console.log('Token JWT firmado y encodeado', signedToken)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{api_key}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Signature",
+                    "value": "{{signature}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url_api_virtualpos_sandbox}}/v3/charges/{suscription_id}",
+                  "host": [
+                    "{{url_api_virtualpos_sandbox}}"
+                  ],
+                  "path": [
+                    "v3",
+                    "charges",
+                    "{suscription_id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "api_key",
+      "value": "tu_api_key_virtualpos",
+      "type": "string"
+    },
+    {
+      "key": "secret_key",
+      "value": "tu_secret_key_virtualpos",
+      "type": "string"
+    },
+    {
+      "key": "signature",
+      "value": "X",
+      "type": "string"
+    },
+    {
+      "key": "url_api_virtualpos_producccion",
+      "value": "https://api.virtualpos.cl",
+      "type": "string"
+    },
+    {
+      "key": "url_api_virtualpos_sandbox",
+      "value": "https://api.virtualpos-sandbox.com",
+      "type": "string"
+    }
+  ]
+}
