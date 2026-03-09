@@ -12,17 +12,14 @@ pip install -e ./package
 ```
 
 ## Instalacion desde GitHub
-
-Reemplaza `TU_USUARIO/TU_REPO` por tu repositorio publico:
-
 ```bash
-pip install "git+https://github.com/TU_USUARIO/TU_REPO.git@main#subdirectory=package"
+pip install "git+https://github.com/VladimirVarelaH/virtualpos-sdk-python.git@main#subdirectory=package"
 ```
 
 Recomendado para version estable con tag:
 
 ```bash
-pip install "git+https://github.com/TU_USUARIO/TU_REPO.git@v0.1.0#subdirectory=package"
+pip install "git+https://github.com/VladimirVarelaH/virtualpos-sdk-python.git@v0.1.0#subdirectory=package"
 ```
 
 ## Pruebas de integracion (sandbox)
